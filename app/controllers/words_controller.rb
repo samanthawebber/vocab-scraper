@@ -29,7 +29,7 @@ class WordsController < ApplicationController
     end
    end
 
-    render json: sentences.to_json
+    render jsonapi: sentences
 
   end
 
