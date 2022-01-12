@@ -3,5 +3,8 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   # root "articles#index"
-  get '/words', to: "words#get_sentences", as: 'sentences'
+  get  '/sentences',      to: "sentences#get_sentences"
+  put '/sentences/:id',  to: "sentences#update_ranking"
+  post '/sentences',      to: "sentences#post_sentence"
+
 end
