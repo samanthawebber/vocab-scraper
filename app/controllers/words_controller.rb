@@ -5,12 +5,13 @@ require 'json'
 class WordsController < ApplicationController
 
   def get_sentences
-    
-    word      = params[:word]
-    lang      = params[:lang]
-    sentences = ''
 
-    query_uri = "https://www.googleapis.com/books/v1/volumes?q=" + word + "&langRestrict=" + lang
+    # create Word, or if already exists, then assign that instance to word var 
+    
+    Word.create(word:  params[:word], lang: params[:lang])
+    word      = Word.find_by(word: params[:word], lang: params[:lang])
+
+    query_uri = "https://www.googleapis.com/books/v1/volumes?q=" + word.word + "&langRestrict=" + word.lang
 
     uri       = URI(query_uri)
     res       = Net::HTTP.get_response(uri)
@@ -21,16 +22,25 @@ class WordsController < ApplicationController
 
       if item.has_key?("searchInfo")
         if item['searchInfo'].has_key?("textSnippet")
-         if item['searchInfo']['textSnippet'].downcase().include? word
-           sentences += item['searchInfo']['textSnippet'] + "\n"
+          if item['searchInfo']['textSnippet'].downcase().include? word.word
+           
+            sentence = Sentence.create(sentence: item['searchInfo']['textSnippet'], ranking: 0, word: word) 
+           #sentences += item['searchInfo']['textSnippet'] + "\n"
+           word.sentences << sentence
          end
         end
       end
     end
    end
 
-    render json: sentences
-
+    renderer = JSONAPI::Serializable::Renderer.new
+    output = renderer.render(word.sentences.all, class: {Sentence: SentenceSerializer})
+    render json: output
   end
+
+  def post_ranking
+  end
+
+  def post_sentence
 
 end
