@@ -6,8 +6,7 @@ include SentenceSorter
 class SentencesController < ApplicationController
 
   def show
-    output = JSONAPI::Serializable::Renderer.new.render(Sentence.find(params[:id]), class: {Sentence: SentenceSerializer})
-    render json: output
+    render json: JSONAPI::Serializable::Renderer.new.render(Sentence.find(params[:id]), class: {Sentence: SentenceSerializer}) 
   end
 
   def generate_sentences
