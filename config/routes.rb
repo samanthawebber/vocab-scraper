@@ -6,6 +6,6 @@ Rails.application.routes.draw do
   get '/sentences/:id',       to: "sentences#show"
   get  '/generate_sentences', to: "sentences#generate_sentences"
   put '/sentences/:id',       to: "sentences#update_ranking"
-  post '/sentences',          to: "sentences#post_sentence"
+  post '/sentences',          to: "sentences#new"
 
 end
