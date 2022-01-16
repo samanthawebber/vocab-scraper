@@ -1,10 +1,16 @@
 require 'uri'
 require 'net/http'
 require 'json'
+include SentenceSorter
 
 class SentencesController < ApplicationController
 
-  def get_sentences
+  def show
+    output = JSONAPI::Serializable::Renderer.new.render(Sentence.find(params[:id]), class: {Sentence: SentenceSerializer})
+    render json: output
+  end
+
+  def generate_sentences
 
     # create Word, or if already exists, then assign that instance to word var 
     
@@ -25,8 +31,7 @@ class SentencesController < ApplicationController
         if item['searchInfo'].has_key?("textSnippet")
           if item['searchInfo']['textSnippet'].downcase().include? word.word
            
-           sentence = Sentence.create(sentence: item['searchInfo']['textSnippet'], ranking: 0, word: word) 
-           #sentences += item['searchInfo']['textSnippet'] + "\n"
+           sentence = Sentence.create(sentence: item['searchInfo']['textSnippet'], ranking: 0, word: word)  
            word.sentences << sentence
          end
         end
@@ -44,16 +49,8 @@ class SentencesController < ApplicationController
 
     ranking  = params[:ranking]
     sentence = Sentence.find_by(id: params[:id])
-
-    if(ranking == "positive")
-      sentence.ranking+=1
-    elsif(ranking == "negative")
-      sentence.ranking-=1
-    else
-      render plain: "Invalid input: " + params[:ranking]
-      return
-    end
-    sentence.save
+    
+    sentence.rank(ranking)
     
     render plain: "OK" 
   end
