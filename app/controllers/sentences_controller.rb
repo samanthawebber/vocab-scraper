@@ -15,8 +15,8 @@ class SentencesController < ApplicationController
 
     GoogleBooksApiService.new(word).call
 
-    renderer = JSONAPI::Serializable::Renderer.new
-    output = renderer.render(word.sentences.all, class: {Sentence: SentenceSerializer})
+    renderer  = JSONAPI::Serializable::Renderer.new
+    output    = renderer.render(word.sentences.all, class: {Sentence: SentenceSerializer})
     render json: output
   end
 

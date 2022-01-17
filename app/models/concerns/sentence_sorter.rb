@@ -1,4 +1,4 @@
-module SentenceSorter
+class SentenceSorter
 
   RANKING_LIMIT = -3
 
@@ -35,6 +35,7 @@ module SentenceSorter
     return lowest_ranking_sentence
   end
 
+  # first check if Word already has 5 sentences; if so, remove lowest-ranking sentence and replace with new sentence.
   def add_sentence(word, new_sentence)
     if word.sentences.count >= 5
       lowest_ranking_sentence = find_lowest_ranking(word)

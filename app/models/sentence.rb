@@ -1,5 +1,5 @@
 class Sentence < ApplicationRecord
-  include SentenceSorter
+ include SentenceSorter 
 
   belongs_to :word
   validates :sentence, uniqueness: true
