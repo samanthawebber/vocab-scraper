@@ -1,4 +1,4 @@
-class SentenceSorter
+module SentenceSorter
 
   RANKING_LIMIT = -3
 
