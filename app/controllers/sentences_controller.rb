@@ -39,5 +39,5 @@ class SentencesController < ApplicationController
     render plain: "OK"
   end
 
-  params.require(:sentence).permit(:sentence, :ranking, :word)
+
 end

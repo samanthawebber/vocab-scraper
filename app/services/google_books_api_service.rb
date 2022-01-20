@@ -10,14 +10,14 @@ class GoogleBooksApiService
 
   def call
   
-    uri = URI(@base_uri + @word.word + "&langRestrict=" + @word.lang)
+    uri = URI(@base_uri + @word.word + "&langRestrict=" + @word.lang) # possibility for exception
 
     res = Net::HTTP.get_response(uri)
 
     if res.is_a?(Net::HTTPSuccess)
       process_response(res)
-    else
-      raise "500 Unsuccessful call to external API."
+    else 
+      render json: {status: "error", code: 500, message: "Unsuccessful call to external API."}
     end
 
   end
