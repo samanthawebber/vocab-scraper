@@ -14,7 +14,7 @@ class SentencesController < ApplicationController
     word      = Word.find_by(word: params[:word], lang: params[:lang])
 
     GoogleBooksApiService.new(word).call
-    binding.pry
+    #binding.pry
 
     renderer  = JSONAPI::Serializable::Renderer.new
     output    = renderer.render(word.sentences.all, class: {Sentence: SentenceSerializer})
@@ -29,16 +29,20 @@ class SentencesController < ApplicationController
     
     sentence.rank(ranking)
     
-    render plain: "OK" 
+    renderer = JSONAPI::Serializable::Renderer.new
+    output   = renderer.render(sentence, class: {Sentence: SentenceSerializer})
+    render json: output
   end
 
   #add new sentence to list of sentences. If list is full (5 sentences), replace lowest-ranking sentence with this one.
   def new
     
     word = Word.find_by(word: params[:word], lang: params[:lang])
-    word.sentences << Sentence.create(sentence: params[:sentence], word: word)
-    render plain: "OK"
-  end
+    word.add_sentence(Sentence.create(sentence: params[:sentence], word: word))
 
+    renderer = JSONAPI::Serializable::Renderer.new
+    output   = renderer.render(sentence, class: {Sentence: SentenceSerializer})
+    render json: output
+  end
 
 end
