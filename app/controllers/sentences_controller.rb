@@ -14,6 +14,7 @@ class SentencesController < ApplicationController
     word      = Word.find_by(word: params[:word], lang: params[:lang])
 
     GoogleBooksApiService.new(word).call
+    binding.pry
 
     renderer  = JSONAPI::Serializable::Renderer.new
     output    = renderer.render(word.sentences.all, class: {Sentence: SentenceSerializer})

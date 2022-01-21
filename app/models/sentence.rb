@@ -2,7 +2,7 @@ class Sentence < ApplicationRecord
  include SentenceSorter 
 
   belongs_to :word
-  validates :sentence, uniqueness: true
+#  validates :sentence, uniqueness: true
 
   # updates sentence.rating according to rating given in parameters. If ranking is too low, remove sentence from word.
   def rank(ranking)

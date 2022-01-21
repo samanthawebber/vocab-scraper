@@ -24,14 +24,17 @@ class GoogleBooksApiService
 
   def process_response(res)
 
+
     parsed = JSON.parse(res.body)
 
     parsed['items'].each do |item|
       if item.has_key?("searchInfo")
         if item['searchInfo'].has_key?("textSnippet")
           if item['searchInfo']['textSnippet'].downcase().include?@word.word
-            sentence = Sentence.create(sentence: item['searchInfo']['tetSnippet'], ranking: 0, word: @word)
+            sentence = Sentence.create(sentence: item['searchInfo']['textSnippet'], ranking: 0, word: @word)
+            binding.pry
             @word.sentences << sentence
+            sentence.save
           end
         end
       end
