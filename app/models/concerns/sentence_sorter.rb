@@ -22,12 +22,10 @@ module SentenceSorter
 
 
   def find_lowest_ranking
-    lowest_ranking = sentences.first.ranking
     lowest_ranking_sentence = word.sentences.first
 
     for sentence in sentences do
-      if sentence.ranking < lowest_ranking
-        lowest_ranking = sentence.ranking
+      if sentence.ranking < lowest_ranking_sentence.ranking
         lowest_ranking_sentence = sentence
       end
     end
