@@ -9,6 +9,11 @@ describe "GET /sentences/:id" do
     get "/sentences/#{sentence.id}"
     expect(response).to have_http_status(:success)
   end
+  
+  it "returns word for given id" do
+    get "/sentences/#{sentence.id}"
+    expect(JSON.parse(response.body)['sentence']).to eq(sentence)
+  end
 end
 
 
