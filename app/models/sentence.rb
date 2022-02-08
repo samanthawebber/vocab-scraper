@@ -1,5 +1,7 @@
 class Sentence < ApplicationRecord
- include SentenceSorter 
+include SentenceSorter 
+
+DEFAULT_RANKING = 1
 
   belongs_to :word
 #  validates :sentence, uniqueness: true

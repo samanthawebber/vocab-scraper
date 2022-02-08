@@ -4,7 +4,9 @@ include SentenceSorter
 class SentencesController < ApplicationController
 
   def show
-    render json: JSONAPI::Serializable::Renderer.new.render(Sentence.find(params[:id]), class: {Sentence: SentenceSerializer}) 
+
+    sentence = Sentence.find(params[:id])
+    render json: rendered_sentence(sentence)    
   end
 
 
@@ -14,11 +16,8 @@ class SentencesController < ApplicationController
     word      = Word.find_by(word: params[:word], lang: params[:lang])
 
     GoogleBooksApiService.new(word).call
-    #binding.pry
 
-    renderer  = JSONAPI::Serializable::Renderer.new
-    output    = renderer.render(word.sentences.all, class: {Sentence: SentenceSerializer})
-    render json: output
+    render json: rendered_sentence(word.sentences.all)
   end
 
 
@@ -29,20 +28,26 @@ class SentencesController < ApplicationController
     
     sentence.rank(ranking)
     
-    renderer = JSONAPI::Serializable::Renderer.new
-    output   = renderer.render(sentence, class: {Sentence: SentenceSerializer})
-    render json: output
+     
+    render json: rendered_sentence(sentence)
   end
 
   #add new sentence to list of sentences. If list is full (5 sentences), replace lowest-ranking sentence with this one.
   def new
-    
-    word = Word.find_by(word: params[:word], lang: params[:lang])
-    word.add_sentence(Sentence.create(sentence: params[:sentence], word: word))
+     
+    word = Word.find_by(word: params[:word], lang: params[:lang]) # Samantha: what if this word doesn't exist?
 
-    renderer = JSONAPI::Serializable::Renderer.new
-    output   = renderer.render(sentence, class: {Sentence: SentenceSerializer})
-    render json: output
+    sentence = Sentence.create(sentence: params[:sentence], word: word, ranking: 1)  
+    word.add_sentence(sentence)
+    
+  
+    render json: rendered_sentence(sentence)
   end
 
+
+
+  def rendered_sentence(sentence) 
+    renderer = JSONAPI::Serializable::Renderer.new 
+    return renderer.render(sentence, class: {Sentence: SentenceSerializer})
+  end
 end
